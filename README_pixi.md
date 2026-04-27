@@ -243,16 +243,6 @@ I traced the data shapes through each GEN3C inference script to understand exact
 | [`gen3c_dynamic.py`](cosmos_predict1/diffusion/inference/gen3c_dynamic.py) | `(T, C, H, W)` | 1 view × T frames | Single-camera video |
 | [`gen3c_multiview.py`](cosmos_predict1/diffusion/inference/gen3c_multiview.py) | `(N, C, H, W)` | N views × 1 frame | Sparse multi-view images |
 
-Evidence for the multi-view script (from [gen3c_multiview.py:181](cosmos_predict1/diffusion/inference/gen3c_multiview.py#L181)):
-
-```python
-images_key = torch.tensor(npz["images_key_frames"], ...)  # (N, C, H, W), [-1,1]
-depth_key  = torch.tensor(npz["depth_key_frames"],  ...)  # (N, 1, H, W)
-K_key      = torch.tensor(npz["K_key_frames"],      ...)  # (N, 3, 3)
-w2c_key    = torch.tensor(npz["w2cs_key_frames"],   ...)  # (N, 4, 4)
-```
-
-Each of the N keyframes is a single RGB image with its own intrinsics and pose. There is no time axis alongside the view axis — the tensor shape is `(N_views, C, H, W)`, not `(N_views, T_frames, C, H, W)`. So a "multi-view video" with, say, 5 cameras capturing 30 frames each (shape `(5, 30, C, H, W)`) cannot be expressed in this format.
 
 ### Related multi-view capability in the Cosmos family
 
